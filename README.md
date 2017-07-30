@@ -2,6 +2,8 @@
 
 `JKAttributedString` provides Swifty API for `NSAttributedString`.
 
+[![Build Status](https://travis-ci.org/junmo-kim/JKAttributedString.svg?branch=master)](https://travis-ci.org/junmo-kim/JKAttributedString)
+
 Sick of using `NSAttributedString` and `NSMutableAttributedString` on value typed Swift world?
 This makes dealing with attributed string as easy as `String`.
 
