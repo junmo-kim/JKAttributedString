@@ -1,0 +1,18 @@
+language: swift
+osx_image: xcode8.3
+gemfile: Gemfile
+podfile: Podfile
+
+cache:
+  bundler: true
+  cocoapods: true
+
+install:
+  - bundle install --path vendor/bundle
+  - bundle exec pod install
+
+before_script:
+  - export TZ=Asia/Seoul
+
+script:
+  - bundle exec fastlane ios test
