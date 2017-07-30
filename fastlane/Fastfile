@@ -24,7 +24,14 @@ platform :ios do
 
   desc "Runs all the tests"
   lane :test do
-    scan(scheme: "JKAttributedString")
+    scan(
+      scheme: "JKAttributedString",
+      only_testing: ["JKAttributedStringTests"],
+      sdk: "iphonesimulator10.3",
+      devices: [
+        "iPhone 7 (10.3)"
+      ]
+    )
   end
 
   desc "Submit a new Beta Build to Apple TestFlight"
