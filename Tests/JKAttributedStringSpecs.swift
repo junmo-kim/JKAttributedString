@@ -27,6 +27,7 @@ class JKAttributedStringSpecs: QuickSpec {
         }
         
         it("expected to initialized and generate attributed string") {
+            expect(JKAttributedString()).to(beAKindOf(JKAttributedString.self))
             expect(JKAttributedString(string: "string").attributedString)
                 .to(equal(NSAttributedString(string: "string")))
             expect(
@@ -46,6 +47,10 @@ class JKAttributedStringSpecs: QuickSpec {
                     NSAttributedString(string: "string",
                                        attributes: [NSForegroundColorAttributeName: UIColor.red])
                 ))
+            let redStr = NSAttributedString(string: "string",
+                                            attributes: [NSForegroundColorAttributeName: UIColor.red])
+            expect(JKAttributedString(attributedString: redStr).attributedString)
+                == redStr
         }
         
         it("expected forward string properties") {
@@ -59,32 +64,66 @@ class JKAttributedStringSpecs: QuickSpec {
             expect(a.utf16.count) == 17
         }
         
-        it("expected to concat with + operator") {
-            let expectedString = NSMutableAttributedString(string: "aString", attributes: [NSForegroundColorAttributeName: UIColor.red])
-            expectedString.append(NSAttributedString(string: "bString", attributes: [NSForegroundColorAttributeName: UIColor.green]))
+        describe("concat with + operator") {
+            context("between JKAttributedString", { 
+                it("expected to concat", closure: { 
+                    let expectedString = NSMutableAttributedString(string: "aString", attributes: [NSForegroundColorAttributeName: UIColor.red])
+                    expectedString.append(NSAttributedString(string: "bString", attributes: [NSForegroundColorAttributeName: UIColor.green]))
+                    
+                    expect(
+                        (JKAttributedString(string: "aString", attributes: [.color(.red)]) +
+                            JKAttributedString(string: "bString", attributes: [.color(.green)])).attributedString)
+                        == expectedString
+                })
+            })
             
-            expect(
-                (JKAttributedString(string: "aString", attributes: [.color(.red)]) +
-                 JKAttributedString(string: "bString", attributes: [.color(.green)])).attributedString)
-                == expectedString
-            expect((JKAttributedString(string: "", attributes: [.font(.systemFont(ofSize: 14))])
-                + "ing").attributedString)
-                == NSAttributedString(string: "ing")
-            expect((JKAttributedString(string: "str", attributes: [.font(.systemFont(ofSize: 14))])
-                + "ing").attributedString)
-                == NSAttributedString(string: "string",
-                                      attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 14)])
+            context("between JKAttributedString and NSAttributedString", {
+                it("expected to concat", closure: {
+                    let expectedString = NSMutableAttributedString(string: "str", attributes: [NSKernAttributeName: 0.5])
+                    expectedString.append(NSAttributedString(string: "ing", attributes: [NSKernAttributeName: 1.2]))
+                    
+                    expect(("str".attributed([.kern(0.5)]) + NSAttributedString(string: "ing", attributes: [NSKernAttributeName: 1.2])).attributedString) == expectedString
+                    expect(("".attributed([.kern(0.5)]) + NSAttributedString(string: "ing", attributes: [NSKernAttributeName: 1.2])).attributedString)
+                        == NSAttributedString(string: "ing", attributes: [NSKernAttributeName: 1.2])
+                    expect(("str".attributed([.kern(0.5)]) + NSAttributedString(string: "", attributes: [NSKernAttributeName: 1.2])).attributedString)
+                        == NSAttributedString(string: "str", attributes: [NSKernAttributeName: 0.5])
+                    
+                    let expectedString2 = NSMutableAttributedString(string: "str", attributes: [NSLigatureAttributeName: 2])
+                    expectedString2.append(NSAttributedString(string: "ing", attributes: [NSLigatureAttributeName: 3]))
+                    expect((NSAttributedString(string: "str", attributes: [NSLigatureAttributeName: 2]) + "ing".attributed([.ligature(3)])).attributedString) == expectedString2
+                    expect((NSAttributedString(string: "", attributes: [NSLigatureAttributeName: 2]) + "ing".attributed([.ligature(3)])).attributedString)
+                        == NSAttributedString(string: "ing", attributes: [NSLigatureAttributeName: 3])
+                    expect((NSAttributedString(string: "str", attributes: [NSLigatureAttributeName: 2]) + "".attributed([.ligature(3)])).attributedString)
+                        == NSAttributedString(string: "str", attributes: [NSLigatureAttributeName: 2])
+                })
+            })
             
-            expect(("str"
-                + JKAttributedString(string: "", attributes: [.font(.systemFont(ofSize: 14))]))
-                .attributedString)
-                == NSAttributedString(string: "str")
-            expect(("str" + JKAttributedString(
-                string: "ing",
-                attributes: [.font(.systemFont(ofSize: 14))])).attributedString
-                )
-                == NSAttributedString(string: "string",
-                                      attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 14)])
+            context("between JKAttributedString and String", { 
+                it("expected to concat", closure: { 
+                    expect((JKAttributedString(string: "", attributes: [.font(.systemFont(ofSize: 14))])
+                        + "ing").attributedString)
+                        == NSAttributedString(string: "ing")
+                    expect((JKAttributedString(string: "str", attributes: [.font(.systemFont(ofSize: 14))])
+                        + "ing").attributedString)
+                        == NSAttributedString(string: "string",
+                                              attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 14)])
+                    
+                    expect(("str"
+                        + JKAttributedString(string: "", attributes: [.font(.systemFont(ofSize: 14))]))
+                        .attributedString)
+                        == NSAttributedString(string: "str")
+                    expect(("str" + JKAttributedString(
+                        string: "ing",
+                        attributes: [.font(.systemFont(ofSize: 14))])).attributedString
+                        )
+                        == NSAttributedString(string: "string",
+                                              attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 14)])
+                    expect((""
+                        + JKAttributedString(string: "ing", attributes: [.font(.systemFont(ofSize: 14))]))
+                        .attributedString)
+                        == NSAttributedString(string: "ing", attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 14)])
+                })
+            })
         }
         
         it("expected to get attributes") {
@@ -126,12 +165,18 @@ class JKAttributedStringSpecs: QuickSpec {
             }
             
             it("expected to work with custom attribute") {
-                let boldStr = "System".attributed([SystemFontAttribute.bold(20)]).attributedString
+                let boldStr = "SystemBold".attributed([SystemFontAttribute.bold(20)]).attributedString
                 let boldExpected = NSAttributedString(
-                    string: "System",
+                    string: "SystemBold",
                     attributes: [NSFontAttributeName: UIFont.boldSystemFont(ofSize: 20)]
                 )
                 expect(boldStr) == boldExpected
+                
+                let normalStr = JKAttributedString(string: "SystemNormal", attributes: [SystemFontAttribute.normal(12)]).attributedString
+                expect(normalStr) == NSAttributedString(
+                    string: "SystemNormal",
+                    attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 12)]
+                )
             }
         }
     }
