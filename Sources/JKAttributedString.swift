@@ -187,7 +187,7 @@ extension JKAttributedString: Equatable {
 
 extension JKAttributedString {
     
-    fileprivate mutating func _checkUniquelyReferenced() {
+    fileprivate mutating func _confirmUniquelyReferenced() {
         // Provide mutability to backing `NSMutableAttributedString` class instance
         // cf) https://github.com/apple/swift/blob/swift-4.0-branch/stdlib/public/SDK/Foundation/Data.swift
         if !isKnownUniquelyReferenced(&_backing) {
@@ -197,7 +197,7 @@ extension JKAttributedString {
     
     
     public mutating func setAttributes(_ attrs: [String : Any]?, range: Range<String.Index>? = nil) {
-        _checkUniquelyReferenced()
+        _confirmUniquelyReferenced()
         _backing.setAttributes(attrs, range: Converter.utf16Range(of: string, for: range))
     }
     
@@ -222,63 +222,63 @@ extension JKAttributedString {
     }
     
     public mutating func addAttribute(_ attributes: [String : Any], range: Range<String.Index>? = nil) {
-        _checkUniquelyReferenced()
+        _confirmUniquelyReferenced()
         _backing.addAttributes(attributes, range: Converter.utf16Range(of: string, for: range))
     }
     
     public mutating func removeAttribute(_ name: String, range: Range<String.Index>? = nil) {
-        _checkUniquelyReferenced()
+        _confirmUniquelyReferenced()
         _backing.removeAttribute(name, range: Converter.utf16Range(of: string, for: range))
     }
     
     
     public mutating func replaceCharacters(in range: Range<String.Index>? = nil, with str: String) {
-        _checkUniquelyReferenced()
+        _confirmUniquelyReferenced()
         _backing.replaceCharacters(in: Converter.utf16Range(of: string, for: range), with: str)
     }
     
     public mutating func replaceCharacters(in range: Range<String.Index>? = nil, with attrString: NSAttributedString) {
-        _checkUniquelyReferenced()
+        _confirmUniquelyReferenced()
         _backing.replaceCharacters(in: Converter.utf16Range(of: string, for: range), with: attrString)
     }
     
     public mutating func replaceCharacters(in range: Range<String.Index>? = nil, with attrString: JKAttributedString) {
-        _checkUniquelyReferenced()
+        _confirmUniquelyReferenced()
         _backing.replaceCharacters(in: Converter.utf16Range(of: string, for: range), with: attrString._backing)
     }
     
     public mutating func insert(_ attrString: NSAttributedString, at loc: String.Index) {
-        _checkUniquelyReferenced()
+        _confirmUniquelyReferenced()
         _backing.insert(attrString, at: Converter.utf16Location(of: string, at: loc))
     }
     
     public mutating func insert(_ attrString: JKAttributedString, at loc: String.Index) {
-        _checkUniquelyReferenced()
+        _confirmUniquelyReferenced()
         _backing.insert(attrString._backing, at: Converter.utf16Location(of: string, at: loc))
     }
     
     public mutating func append(_ attrString: NSAttributedString) {
-        _checkUniquelyReferenced()
+        _confirmUniquelyReferenced()
         _backing.append(attrString)
     }
     
     public mutating func append(_ attrString: JKAttributedString) {
-        _checkUniquelyReferenced()
+        _confirmUniquelyReferenced()
         _backing.append(attrString._backing)
     }
     
     public mutating func deleteCharacters(in range: Range<String.Index>? = nil) {
-        _checkUniquelyReferenced()
+        _confirmUniquelyReferenced()
         _backing.deleteCharacters(in: Converter.utf16Range(of: string, for: range))
     }
     
     public mutating func setAttributedString(_ attrString: NSAttributedString) {
-        _checkUniquelyReferenced()
+        _confirmUniquelyReferenced()
         _backing.setAttributedString(attrString)
     }
     
     public mutating func setAttributedString(_ attrString: JKAttributedString) {
-        _checkUniquelyReferenced()
+        _confirmUniquelyReferenced()
         _backing.setAttributedString(attrString._backing)
     }
 }
