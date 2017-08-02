@@ -128,7 +128,39 @@ extension JKAttributedString {
 
 extension JKAttributedString {
     
+    public func attributed(_ attributes: [JKAttribute]) -> JKAttributedString {
+        return self.attributed(attributes as [JKAttributeType])
+    }
+    
+    public func attributed(_ attributes: [JKAttributeType]) -> JKAttributedString {
+        var base = self
+        base.setAttributes(attributes.attributes)
+        return base
+    }
+    
+    public func adding(attributes: [JKAttribute], for range: Range<String.Index>? = nil) -> JKAttributedString {
+        return self.adding(attributes: (attributes as [JKAttributeType]), for: range)
+    }
+    
+    public func adding(attributes: [JKAttributeType], for range: Range<String.Index>? = nil) -> JKAttributedString {
+        var base = self
+        base.addAttribute(attributes.attributes, range: range)
+        return base
+    }
+    
     public static func + (left: JKAttributedString, right: JKAttributedString) -> JKAttributedString {
+        var base = left
+        base.append(right)
+        return base
+    }
+    
+    public static func + (left: NSAttributedString, right: JKAttributedString) -> JKAttributedString {
+        var base = right
+        base.insert(left, at: base.string.startIndex)
+        return base
+    }
+    
+    public static func + (left: JKAttributedString, right: NSAttributedString) -> JKAttributedString {
         var base = left
         base.append(right)
         return base
@@ -155,26 +187,6 @@ extension JKAttributedString {
             return nil
         }()
         base.insert(JKAttributedString(string: right, attributes: attributes), at: base.string.endIndex)
-        return base
-    }
-    
-    public func attributed(_ attributes: [JKAttribute]) -> JKAttributedString {
-        return self.attributed(attributes as [JKAttributeType])
-    }
-    
-    public func attributed(_ attributes: [JKAttributeType]) -> JKAttributedString {
-        var base = self
-        base.setAttributes(attributes.attributes)
-        return base
-    }
-    
-    public func adding(attributes: [JKAttribute], for range: Range<String.Index>? = nil) -> JKAttributedString {
-        return self.adding(attributes: (attributes as [JKAttributeType]), for: range)
-    }
-    
-    public func adding(attributes: [JKAttributeType], for range: Range<String.Index>? = nil) -> JKAttributedString {
-        var base = self
-        base.addAttribute(attributes.attributes, range: range)
         return base
     }
 }
