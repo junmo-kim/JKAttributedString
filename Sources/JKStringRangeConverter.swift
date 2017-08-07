@@ -21,7 +21,7 @@ public struct JKStringRangeConverter {
         
         let lowerBound = range.lowerBound.samePosition(in: string.utf16)
         let upperBound = range.upperBound.samePosition(in: string.utf16)
-        return NSRange(location:  string.utf16.startIndex.distance(to: upperBound),
+        return NSRange(location: string.utf16.startIndex.distance(to: lowerBound),
                        length: lowerBound.distance(to: upperBound))
     }
     

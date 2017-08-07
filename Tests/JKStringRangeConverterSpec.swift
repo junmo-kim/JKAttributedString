@@ -31,7 +31,7 @@ class JKStringRangeConverterSpec: QuickSpec {
             let range = testString.range(of: "です")!
             expect(range) == lowerIndex..<upperIndex
             expect(NSValue(range: JKStringRangeConverter.utf16Range(of: testString, for: range)))
-                == NSValue(range: NSRange(location: 15, length: 2))
+                == NSValue(range: NSRange(location: 13, length: 2))
         }
         
         it("expected to convert UTF-16 range to character range") { 
