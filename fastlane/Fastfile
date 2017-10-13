@@ -22,7 +22,7 @@ platform :ios do
     scan(
       scheme: "JKAttributedString",
       only_testing: ["JKAttributedStringTests"],
-      sdk: "iphonesimulator10.3",
+      sdk: "iphonesimulator11.0",
       devices: [
         "iPhone 7 (10.3)"
       ]

@@ -11,7 +11,7 @@ import Foundation
 public struct JKStringRangeConverter {
     
     public static func utf16Location(of string: String, at location: String.Index) -> Int {
-        return string.utf16.startIndex.distance(to: location.samePosition(in: string.utf16))
+        return location.encodedOffset - string.utf16.startIndex.encodedOffset
     }
     
     public static func utf16Range(of string: String, for range: Range<String.Index>? = nil) -> NSRange {
@@ -19,10 +19,11 @@ public struct JKStringRangeConverter {
             return NSRange(location: 0, length: string.utf16.count)
         }
         
-        let lowerBound = range.lowerBound.samePosition(in: string.utf16)
-        let upperBound = range.upperBound.samePosition(in: string.utf16)
-        return NSRange(location: string.utf16.startIndex.distance(to: lowerBound),
-                       length: lowerBound.distance(to: upperBound))
+        let lowerBound = range.lowerBound.encodedOffset
+        let upperBound = range.upperBound.encodedOffset
+        
+        return NSRange(location: lowerBound,
+                       length: upperBound - lowerBound)
     }
     
     public static func characterRange(of string: String, for range: NSRange? = nil) -> Range<String.Index>? {
