@@ -24,7 +24,7 @@ platform :ios do
       only_testing: ["JKAttributedStringTests"],
       sdk: "iphonesimulator11.0",
       devices: [
-        "iPhone 7 (10.3)"
+        "iPhone 7 (11.0)"
       ]
     )
   end
