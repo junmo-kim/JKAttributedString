@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "JKAttributedString"
-  s.version      = "0.2"
+  s.version      = "0.2.0"
   s.summary      = "Value typed Attributed String"
   s.homepage     = "https://github.com/junmo-kim/JKAttributedString"
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
